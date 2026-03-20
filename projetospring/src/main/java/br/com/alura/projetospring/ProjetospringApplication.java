@@ -1,5 +1,6 @@
 package br.com.alura.projetospring;
 
+import br.com.alura.projetospring.model.DadosEpisodio;
 import br.com.alura.projetospring.model.DadosSerie;
 import br.com.alura.projetospring.service.ConsumoApi;
 import br.com.alura.projetospring.service.ConverteDados;
@@ -17,12 +18,14 @@ public class ProjetospringApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		var consumoApi = new ConsumoApi();
-		var json = consumoApi.obterDados("https://www.omdbapi.com/?t=gilmore+girls&apikey=f11e75e");
+		var json = consumoApi.obterDados("https://www.omdbapi.com/?t=peaky+blinders&Season=1&Episode=1&apikey=f11e75e");
 		System.out.println(json);
 
 		ConverteDados conversor = new ConverteDados();
 		DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
+		DadosEpisodio dadosEpisodio = conversor.obterDados(json, DadosEpisodio.class);
 
 		System.out.println(dados);
+		System.out.println(dadosEpisodio);
 	}
 }
