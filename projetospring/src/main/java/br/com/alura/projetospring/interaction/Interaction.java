@@ -3,13 +3,18 @@ package br.com.alura.projetospring.interaction;
 import br.com.alura.projetospring.model.DadosEpisodio;
 import br.com.alura.projetospring.model.DadosSerie;
 import br.com.alura.projetospring.model.DadosTemporada;
+import br.com.alura.projetospring.model.Episodio;
 import br.com.alura.projetospring.service.ConsumoApi;
 import br.com.alura.projetospring.service.ConverteDados;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Interaction {
 
@@ -28,7 +33,7 @@ public class Interaction {
         DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
         DadosEpisodio dadosEpisodio = conversor.obterDados(json, DadosEpisodio.class);
 
-        System.out.println(dados);
+        System.out.println(dadosEpisodio);
 
         List<DadosTemporada> listaTemporadas = new ArrayList<>();
 
@@ -41,13 +46,39 @@ public class Interaction {
         }
         listaTemporadas.forEach(System.out::println);
 
-//        for (int i = 0; i < dados.totalTemporadas(); i++){
-//            List <DadosEpisodio> episodiosTemporada = listaTemporadas.get(i).episodios();
-//            for (int j = 0; j < episodiosTemporada.size(); j++){
-//                System.out.println(episodiosTemporada.get(j).titulo());
-//            }
-//        }
+        List<DadosEpisodio> dadosEpisodios = listaTemporadas.stream()
+                .flatMap(t -> t.episodios().stream())
+                .collect(Collectors.toList());
 
-        listaTemporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+        System.out.println("\n Top 5 episódios:");
+        dadosEpisodios.stream()
+                .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+                .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+                .limit(5)
+                .forEach(System.out::println);
+
+        List<Episodio> episodios = listaTemporadas.stream()
+                .flatMap(t -> t.episodios().stream()
+                        .map(d -> new Episodio(t.numeroTemp(), d))
+                ).collect(Collectors.toList());
+
+        episodios.forEach(System.out::println);
+
+        System.out.println("A partir de que ano você deseja ver os episódios? ");
+        var ano = leitura.nextInt();
+        leitura.nextLine();
+
+        LocalDate dataBusca = LocalDate.of(ano, 1, 1);
+
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        episodios.stream()
+                .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca))
+                .forEach(e -> System.out.println(
+                        "Temporada: " + e.getNumeroTempa() +
+                                " Episódio: " + e.getTitulo() +
+                                " Data de lançamento: " + e.getDataLancamento().format(formatador)
+                ));
+
+
     }
 }
