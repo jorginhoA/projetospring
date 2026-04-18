@@ -30,7 +30,7 @@ public class Episodio {
         }
     }
 
-    public Integer getNumeroTempa() {
+    public Integer getNumeroTemp() {
         return numeroTemp;
     }
 
@@ -77,6 +77,6 @@ public class Episodio {
                 ", titulo='" + titulo + '\'' +
                 ", numeroEpisodio=" + numeroEpisodio +
                 ", avaliacao=" + avaliacao +
-                ", dataLancamento=" + dataLancamento;
+                ", dataLancamento=" + dataLancamento + "}";
     }
 }
