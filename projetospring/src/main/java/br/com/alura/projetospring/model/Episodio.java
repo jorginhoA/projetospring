@@ -74,9 +74,9 @@ public class Episodio {
     public String toString() {
         return "{" +
                 "numeroTemp=" + numeroTemp +
-                ", titulo='" + titulo + '\'' +
-                ", numeroEpisodio=" + numeroEpisodio +
-                ", avaliacao=" + avaliacao +
-                ", dataLancamento=" + dataLancamento + "}";
+                "; titulo='" + titulo + '\'' +
+                "; numeroEpisodio=" + numeroEpisodio +
+                "; avaliacao=" + avaliacao +
+                "; dataLancamento=" + dataLancamento + "}";
     }
 }
